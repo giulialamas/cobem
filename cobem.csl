@@ -1,65 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0">
   <info>
-    <title>ABCM COBEM – Giulia (custom)</title>
-    <title-short>COBEM</title-short>
-    <id>https://example.org/styles/abcm-cobem-giulia</id>
-    <link href="https://example.org/styles/abcm-cobem-giulia" rel="self"/>
-    <author><name>Giulia Lamas</name></author>
+    <title>COBEM Conference Style</title>
+    <id>https://raw.githubusercontent.com/giulialamas/cobem/main/cobem.csl</id>
+    <link href="https://raw.githubusercontent.com/giulialamas/cobem/main/cobem.csl" rel="self"/>
+    <link href="http://cobem.org" rel="documentation"/>
+    <author>
+      <name>Giulia C. Lamas</name>
+    </author>
     <category citation-format="author-date"/>
-    <updated>2025-08-28T00:00:00Z</updated>
-    <rights license="http://creativecommons.org/licenses/by-sa/3.0/"/>
+    <summary>Style for COBEM conference papers, based on ABNT/author-date.</summary>
+    <updated>2025-08-28T00:00:00+00:00</updated>
   </info>
 
-  <locale xml:lang="en">
-    <terms>
-      <term name="and">and</term>
-      <term name="volume" form="short">Vol.</term>
-      <term name="page" form="short">pp.</term>
-      <term name="accessed">Accessed</term>
-    </terms>
-  </locale>
-
-  <macro name="authors">
-    <names variable="author" and="text" delimiter=", ">
-      <name name-as-sort-order="all" sort-separator=", " initialize-with="." delimiter=", "/>
+  <macro name="author">
+    <names variable="author">
+      <name form="long" and="symbol" delimiter=", "/>
+      <label form="short" prefix=", "/>
     </names>
   </macro>
 
-  <macro name="year">
-    <date variable="issued"><date-part name="year"/></date>
+  <macro name="issued">
+    <date variable="issued">
+      <date-part name="year"/>
+    </date>
   </macro>
 
-  <macro name="quoted-title"><text variable="title" quotes="true"/></macro>
-  <macro name="italic-title"><text variable="title" font-style="italic"/></macro>
-
-  <macro name="place-publisher">
-    <group delimiter=", ">
-      <text variable="publisher-place"/>
-      <text variable="publisher"/>
-    </group>
+  <macro name="title">
+    <text variable="title" font-style="italic"/>
   </macro>
 
-  <macro name="vol-pages">
-    <group delimiter=", ">
-      <group><label variable="volume" form="short" suffix=" "/><text variable="volume"/></group>
-      <group><label variable="page" form="short" suffix=" "/><text variable="page"/></group>
-    </group>
+  <macro name="container-title">
+    <text variable="container-title"/>
   </macro>
 
-  <macro name="container">
-    <group delimiter=", ">
-      <text variable="container-title" font-style="italic"/>
-      <text macro="vol-pages"/>
-    </group>
+  <macro name="pages">
+    <text variable="page" prefix=": "/>
   </macro>
 
-  <citation collapse="year">
+  <citation collapse="year" delimiter="; ">
+    <sort>
+      <key macro="author"/>
+      <key macro="issued"/>
+    </sort>
     <layout prefix="(" suffix=")" delimiter="; ">
       <group delimiter=", ">
-        <text macro="authors"/><text macro="year"/>
+        <text macro="author"/>
+        <text macro="issued"/>
       </group>
     </layout>
   </citation>
 
-  <bibliography hanging-indent="true" line-spacing="
+  <bibliography et-al-min="4" et-al-use-first="3" delimiter-precedes-et-al="always" line-spacing="2" entry-spacing="2"/>
+
+  <bibliography>
+    <sort>
+      <key macro="author"/>
+      <key macro="issued"/>
+    </sort>
+    <layout hanging-indent="true" line-spacing="2" entry-spacing="2" delimiter=". ">
+      <group delimiter=". ">
+        <text macro="author"/>
+        <text macro="title"/>
+        <text macro="container-title"/>
+        <text variable="volume" prefix=", v. "/>
+        <text variable="issue" prefix=", n. "/>
+        <text macro="pages"/>
+        <text macro="issued"/>
+        <text variable="DOI" prefix="doi: "/>
+      </group>
+    </layout>
+  </bibliography>
+</style>
