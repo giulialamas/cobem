@@ -1,74 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
-<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0">
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
   <info>
-    <title>COBEM Conference Style</title>
-    <id>https://raw.githubusercontent.com/giulialamas/cobem/main/cobem.csl</id>
-    <link href="https://raw.githubusercontent.com/giulialamas/cobem/main/cobem.csl" rel="self"/>
-    <link href="http://cobem.org" rel="documentation"/>
-    <author>
-      <name>Giulia C. Lamas</name>
-    </author>
+    <title>ABCM/COBEM – References (Giulia custom)</title>
+    <id>http://www.zotero.org/styles/abcm-cobem-giulia</id>
+    <link href="http://www.zotero.org/styles/abcm-cobem-giulia" rel="self"/>
     <category citation-format="author-date"/>
-    <summary>Style for COBEM conference papers, based on ABNT/author-date.</summary>
     <updated>2025-08-28T00:00:00+00:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/"/>
   </info>
 
-  <macro name="author">
-    <names variable="author">
-      <name form="long" and="symbol" delimiter=", "/>
-      <label form="short" prefix=", "/>
+  <!-- ====== MACROS ====== -->
+
+  <!-- Year with suffix (2017a, 2017b, …) -->
+  <macro name="year-with-suffix">
+    <choose>
+      <if variable="issued">
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+        <text variable="year-suffix"/>
+      </if>
+      <else>
+        <text value="[n.d.]"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- Authors: Lastname, I.N.I., ..., and Lastname, I. -->
+  <macro name="authors">
+    <names variable="author" and="text" delimiter=", " delimiter-precedes-last="always">
+      <name name-as-sort-order="all" sort-separator=", " initialize-with="."/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <text variable="title"/>
+      </substitute>
     </names>
   </macro>
 
-  <macro name="issued">
-    <date variable="issued">
-      <date-part name="year"/>
-    </date>
+  <!-- Container title (journal/proceedings) in italics -->
+  <macro name="container">
+    <text variable="container-title" font-style="italic"/>
   </macro>
 
-  <macro name="title">
+  <!-- Pages/Volume formatting -->
+  <macro name="journal-locators">
+    <group delimiter=", ">
+      <text variable="volume" prefix="Vol. "/>
+      <text variable="page" prefix="pp. "/>
+    </group>
+  </macro>
+
+  <!-- URL + Accessed -->
+  <macro name="access">
+    <group delimiter=". ">
+      <text variable="URL"/>
+      <date variable="accessed" prefix="Accessed ">
+        <date-part name="day" suffix=" "/>
+        <date-part name="month" form="long" suffix=" "/>
+        <date-part name="year"/>
+      </date>
+    </group>
+  </macro>
+
+  <!-- Place, Publisher (publisher then city, as in template) -->
+  <macro name="publisher-block">
+    <group delimiter=", ">
+      <text variable="publisher"/>
+      <text variable="publisher-place"/>
+    </group>
+  </macro>
+
+  <!-- Proceedings “In …” (italic) -->
+  <macro name="in-proceedings">
+    <group>
+      <text term="in" text-case="capitalize-first" suffix=" "/>
+      <text variable="container-title" font-style="italic"/>
+    </group>
+  </macro>
+
+  <!-- Title rules -->
+  <macro name="title-quoted">
+    <text variable="title" quotes="true"/>
+  </macro>
+  <macro name="title-italic">
     <text variable="title" font-style="italic"/>
   </macro>
 
-  <macro name="container-title">
-    <text variable="container-title"/>
-  </macro>
-
-  <macro name="pages">
-    <text variable="page" prefix=": "/>
-  </macro>
-
-  <citation collapse="year" delimiter="; ">
+  <!-- ====== CITATION ====== -->
+  <citation et-al-min="999" et-al-use-first="999" disambiguate-add-year-suffix="true" collapse="year">
     <sort>
-      <key macro="author"/>
-      <key macro="issued"/>
+      <key macro="authors"/>
+      <key variable="issued"/>
     </sort>
     <layout prefix="(" suffix=")" delimiter="; ">
       <group delimiter=", ">
-        <text macro="author"/>
-        <text macro="issued"/>
+        <text macro="authors"/>
+        <text macro="year-with-suffix"/>
+        <group>
+          <label variable="locator" form="short"/>
+          <text variable="locator" prefix=" "/>
+        </group>
       </group>
     </layout>
   </citation>
 
-  <bibliography et-al-min="4" et-al-use-first="3" delimiter-precedes-et-al="always" line-spacing="2" entry-spacing="2"/>
-
-  <bibliography>
+  <!-- ====== BIBLIOGRAPHY ====== -->
+  <bibliography hanging-indent="true" entry-spacing="1" et-al-min="999" et-al-use-first="999">
     <sort>
-      <key macro="author"/>
-      <key macro="issued"/>
+      <key macro="authors"/>
+      <key variable="issued"/>
+      <key variable="title"/>
     </sort>
-    <layout hanging-indent="true" line-spacing="2" entry-spacing="2" delimiter=". ">
-      <group delimiter=". ">
-        <text macro="author"/>
-        <text macro="title"/>
-        <text macro="container-title"/>
-        <text variable="volume" prefix=", v. "/>
-        <text variable="issue" prefix=", n. "/>
-        <text macro="pages"/>
-        <text macro="issued"/>
-        <text variable="DOI" prefix="doi: "/>
-      </group>
+
+    <layout>
+      <choose>
+
+        <!-- JOURNAL ARTICLE -->
+        <if type="article-journal">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-quoted" suffix="."/>
+            <group delimiter=", ">
+              <text macro="container"/>
+              <text macro="journal-locators"/>
+            </group>
+            <text value="."/>
+          </group>
+        </if>
+
+        <!-- MAGAZINE/NEWSPAPER -->
+        <else-if type="article-magazine article-newspaper" match="any">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-quoted" suffix="."/>
+            <text macro="container" suffix="."/>
+            <text macro="access" suffix="."/>
+          </group>
+        </else-if>
+
+        <!-- PROCEEDINGS PAPER -->
+        <else-if type="paper-conference">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-quoted" suffix="."/>
+            <text macro="in-proceedings" suffix="."/>
+            <group delimiter=", ">
+              <text macro="publisher-block"/>
+              <text variable="page" prefix="pp. "/>
+            </group>
+            <text value="."/>
+          </group>
+        </else-if>
+
+        <!-- BOOK -->
+        <else-if type="book">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-italic" suffix="."/>
+            <text macro="publisher-block" suffix="."/>
+          </group>
+        </else-if>
+
+        <!-- CHAPTER (book section) -->
+        <else-if type="chapter">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-quoted" suffix="."/>
+            <group delimiter=" ">
+              <text term="in" text-case="capitalize-first" suffix=" "/>
+              <text macro="container" suffix="."/>
+            </group>
+            <group delimiter=", ">
+              <text macro="publisher-block"/>
+              <text variable="page" prefix="pp. "/>
+            </group>
+            <text value="."/>
+          </group>
+        </else-if>
+
+        <!-- REPORT -->
+        <else-if type="report">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-italic" suffix="."/>
+            <text macro="publisher-block" suffix="."/>
+            <text macro="access" suffix="."/>
+          </group>
+        </else-if>
+
+        <!-- THESIS -->
+        <else-if type="thesis">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-italic" suffix="."/>
+            <group delimiter=", ">
+              <text variable="genre"/>
+              <text variable="publisher"/>
+              <text variable="publisher-place"/>
+            </group>
+            <text value="."/>
+          </group>
+        </else-if>
+
+        <!-- PATENT -->
+        <else-if type="patent">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-quoted" suffix="."/>
+            <group delimiter=", ">
+              <text value="Patent"/>
+              <text variable="authority"/>
+              <text variable="number" prefix="Registry number: "/>
+            </group>
+            <group delimiter=", " prefix=". ">
+              <date variable="submitted" prefix="Application date: ">
+                <date-part name="day" suffix=" "/>
+                <date-part name="month" form="long" suffix=" "/>
+                <date-part name="year"/>
+              </date>
+              <date variable="issued" prefix="Grant date: ">
+                <date-part name="day" suffix=" "/>
+                <date-part name="month" form="long" suffix=" "/>
+                <date-part name="year"/>
+              </date>
+            </group>
+            <text value="."/>
+          </group>
+        </else-if>
+
+        <!-- WEBPAGE / GENERIC -->
+        <else>
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <choose>
+              <if type="webpage post post-weblog" match="any">
+                <text macro="title-italic" suffix="."/>
+                <text macro="publisher-block" suffix="."/>
+                <text macro="access" suffix="."/>
+              </if>
+              <else>
+                <text macro="title-quoted" suffix="."/>
+                <text macro="container" suffix="."/>
+              </else>
+            </choose>
+          </group>
+        </else>
+      </choose>
     </layout>
   </bibliography>
 </style>
