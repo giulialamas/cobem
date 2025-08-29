@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
+  <info>
+    <title>ABCM COBEM Style (Giulia)</title>
+    <id>http://www.zotero.org/styles/abcm-cobem</id>
+    <link href="http://www.zotero.org/styles/abcm-cobem" rel="self"/>
+    <author>
+      <name>Giulia Lamas</name>
+    </author>
+    <category citation-format="author-date"/>
+    <category field="engineering"/>
+    <updated>2025-08-28T00:00:00+00:00</updated>
+    <summary>Custom style for ABCM COBEM based on author-date system with specific formatting</summary>
+  </info>
+
+  <macro name="author">
+    <names variable="author">
+      <name and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always" initialize-with=". "/>
+      <label form="short" prefix=" " text-case="lowercase" suffix="."/>
+    </names>
+  </macro>
+
+  <macro name="access">
+    <group>
+      <text value="Accessed " suffix=" "/>
+      <date variable="accessed">
+        <date-part name="day" suffix=" "/>
+        <date-part name="month" suffix=" "/>
+        <date-part name="year"/>
+      </date>
+    </group>
+  </macro>
+
+  <macro name="title">
+    <choose>
+      <if type="article-journal">
+        <text variable="title" quotes="true"/>
+      </if>
+      <else-if type="webpage">
+        <text variable="title" quotes="true"/>
+      </else-if>
+      <else>
+        <text variable="title" font-style="italic"/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="container-title">
+    <text variable="container-title" font-style="italic"/>
+  </macro>
+
+  <macro name="issued">
+    <date variable="issued">
+      <date-part name="year"/>
+    </date>
+  </macro>
+
+  <macro name="pages">
+    <group>
+      <label variable="page" form="short" suffix=" "/>
+      <text variable="page"/>
+    </group>
+  </macro>
+
+  <citation collapse="year-suffix" et-al-min="3" et-al-use-first="1">
+    <sort>
+      <key variable="issued"/>
+      <key variable="author"/>
+    </sort>
+    <layout prefix="(" suffix=")" delimiter="; ">
+      <group delimiter=", ">
+        <text macro="author"/>
+        <text macro="issued"/>
+      </group>
+    </layout>
+  </citation>
+
+  <bibliography hanging-indent="true" line-spacing="1" entry-spacing="0" sort-separator=", ">
+    <sort>
+      <key macro="author"/>
+      <key variable="issued"/>
+    </sort>
+    <layout>
+      <text macro="author" suffix=". "/>
+      <text macro="issued" suffix=". "/>
+      <text macro="title" suffix=". "/>
+      <group delimiter=", ">
+        <text macro="container-title"/>
+        <group delimiter=", ">
+          <text variable="volume"/>
+          <text variable="page"/>
+        </group>
+      </group>
+      <group prefix=". " delimiter=", ">
+        <text variable="publisher"/>
+        <text variable="publisher-place"/>
+      </group>
+      <group prefix=". ">
+        <text macro="access" suffix="."/>
+      </group>
+    </layout>
+  </bibliography>
+</style>
