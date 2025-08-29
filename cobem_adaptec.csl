@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
+  <info>
+    <title>COBEM Conference Style (Adapted)</title>
+    <id>http://www.zotero.org/styles/cobem-adapted</id>
+    <link href="http://www.zotero.org/styles/cobem-adapted" rel="self"/>
+    <author>
+      <name>Adapted by Giulia Lamas & ChatGPT</name>
+    </author>
+    <category citation-format="author-date"/>
+    <category field="engineering"/>
+    <updated>2025-08-28</updated>
+  </info>
+
+  <macro name="author">
+    <names variable="author">
+      <name name-as-sort-order="first" and="text" delimiter=", " initialize-with="." delimiter-precedes-last="always"/>
+    </names>
+  </macro>
+
+  <macro name="title">
+    <choose>
+      <if type="article-journal">
+        <text variable="title" prefix="&quot;" suffix="&quot;"/>
+      </if>
+      <else>
+        <text variable="title"/>
+      </else>
+    </choose>
+  </macro>
+
+  <macro name="container-title">
+    <text variable="container-title" font-style="italic"/>
+  </macro>
+
+  <macro name="access">
+    <group>
+      <text value="Accessed "/>
+      <date variable="accessed">
+        <date-part name="day" suffix=" "/>
+        <date-part name="month" form="long" suffix=" "/>
+        <date-part name="year"/>
+      </date>
+    </group>
+  </macro>
+
+  <macro name="issued">
+    <date variable="issued">
+      <date-part name="year"/>
+    </date>
+  </macro>
+
+  <macro name="pages">
+    <text variable="page" prefix="pp. "/>
+  </macro>
+
+  <macro name="volume">
+    <text variable="volume" font-weight="bold"/>
+  </macro>
+
+  <macro name="publisher">
+    <group delimiter=", ">
+      <text variable="publisher-place"/>
+      <text variable="publisher"/>
+    </group>
+  </macro>
+
+  <citation>
+    <layout prefix="(" suffix=")" delimiter="; ">
+      <text macro="author"/>
+      <text macro="issued"/>
+    </layout>
+  </citation>
+
+  <bibliography hanging-indent="false" line-spacing="1" entry-spacing="1">
+    <sort>
+      <key macro="author"/>
+      <key macro="issued"/>
+    </sort>
+    <layout suffix=".">
+      <group delimiter=". ">
+        <text macro="author"/>
+        <text macro="title"/>
+        <text macro="container-title"/>
+        <group delimiter=", ">
+          <text macro="volume"/>
+          <text macro="pages"/>
+        </group>
+        <text macro="publisher"/>
+        <text macro="issued"/>
+        <text macro="access"/>
+      </group>
+    </layout>
+  </bibliography>
+</style>
