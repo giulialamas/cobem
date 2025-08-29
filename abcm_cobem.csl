@@ -10,15 +10,8 @@
     <category citation-format="author-date"/>
     <category field="engineering"/>
     <updated>2025-08-28T00:00:00+00:00</updated>
-    <summary>Custom style for ABCM COBEM based on author-date system with specific formatting</summary>
+    <summary>Custom style for ABCM COBEM based on author-date system with specific formatting and italic et al.</summary>
   </info>
-
-  <macro name="author">
-    <names variable="author">
-      <name and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always" initialize-with=". "/>
-      <label form="short" prefix=" " text-case="lowercase" suffix="."/>
-    </names>
-  </macro>
 
   <macro name="access">
     <group>
@@ -69,20 +62,27 @@
     </sort>
     <layout prefix="(" suffix=")" delimiter="; ">
       <group delimiter=", ">
-        <text macro="author"/>
-        <text macro="issued"/>
+        <names variable="author">
+          <name and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always" initialize-with=". "/>
+          <et-al font-style="italic"/>
+        </names>
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
       </group>
     </layout>
   </citation>
 
   <bibliography hanging-indent="true" line-spacing="1" entry-spacing="0" sort-separator=", ">
     <sort>
-      <key macro="author"/>
+      <key variable="author"/>
       <key variable="issued"/>
     </sort>
     <layout>
-      <text macro="author" suffix=". "/>
-      <text macro="issued" suffix=". "/>
+      <names variable="author">
+        <name and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always" initialize-with=". "/>
+      </names>
+      <text macro="issued" prefix=". " suffix=". "/>
       <text macro="title" suffix=". "/>
       <group delimiter=", ">
         <text macro="container-title"/>
