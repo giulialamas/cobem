@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
   <info>
-    <title>ABCM/COBEM – References (Giulia custom)</title>
-    <id>http://www.zotero.org/styles/abcm-cobem-giulia</id>
-    <link href="http://www.zotero.org/styles/abcm-cobem-giulia" rel="self"/>
+    <title>ABCM/COBEM – References (Giulia Clean)</title>
+    <id>http://www.zotero.org/styles/abcm-cobem-giulia-clean</id>
+    <link href="http://www.zotero.org/styles/abcm-cobem-giulia-clean" rel="self"/>
     <category citation-format="author-date"/>
     <updated>2025-08-28T00:00:00+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/"/>
   </info>
 
-  <!-- ====== MACROS ====== -->
+  <!-- ========= MACROS ========= -->
 
-  <!-- Year with suffix (2017a, 2017b, …) -->
+  <!-- Autores: Last, I.N. , and Last, I.N. -->
+  <macro name="authors">
+    <names variable="author" and="text" delimiter=", " delimiter-precedes-last="always">
+      <name name-as-sort-order="all" sort-separator=", " initialize-with="."/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+        <text variable="title"/>
+      </substitute>
+    </names>
+  </macro>
+
+  <!-- Ano (com sufixo a/b/c se necessário) -->
   <macro name="year-with-suffix">
     <choose>
       <if variable="issued">
@@ -26,28 +38,34 @@
     </choose>
   </macro>
 
-  <!-- Authors: Lastname, I.N.I., ..., and Lastname, I. -->
-  <macro name="authors">
-    <names variable="author" and="text" delimiter=", " delimiter-precedes-last="always">
-      <name name-as-sort-order="all" sort-separator=", " initialize-with="."/>
-      <substitute>
-        <names variable="editor"/>
-        <names variable="translator"/>
-        <text variable="title"/>
-      </substitute>
-    </names>
-  </macro>
+  <!-- Títulos -->
+  <macro name="title-quoted"><text variable="title" quotes="true"/></macro>
+  <macro name="title-italic"><text variable="title" font-style="italic"/></macro>
 
-  <!-- Container title (journal/proceedings) in italics -->
-  <macro name="container">
-    <text variable="container-title" font-style="italic"/>
-  </macro>
+  <!-- Periódico/Anais (container) -->
+  <macro name="container-italic"><text variable="container-title" font-style="italic"/></macro>
 
-  <!-- Pages/Volume formatting -->
+  <!-- Volume e páginas -->
   <macro name="journal-locators">
     <group delimiter=", ">
       <text variable="volume" prefix="Vol. "/>
       <text variable="page" prefix="pp. "/>
+    </group>
+  </macro>
+
+  <!-- Editora e local -->
+  <macro name="publisher-block">
+    <group delimiter=", ">
+      <text variable="publisher"/>
+      <text variable="publisher-place"/>
+    </group>
+  </macro>
+
+  <!-- “In Proceedings of …” -->
+  <macro name="in-proceedings">
+    <group delimiter=" ">
+      <text term="in" text-case="capitalize-first"/>
+      <text variable="container-title" font-style="italic"/>
     </group>
   </macro>
 
@@ -63,35 +81,12 @@
     </group>
   </macro>
 
-  <!-- Place, Publisher (publisher then city, as in template) -->
-  <macro name="publisher-block">
-    <group delimiter=", ">
-      <text variable="publisher"/>
-      <text variable="publisher-place"/>
-    </group>
-  </macro>
-
-  <!-- Proceedings “In …” (italic) -->
-  <macro name="in-proceedings">
-    <group>
-      <text term="in" text-case="capitalize-first" suffix=" "/>
-      <text variable="container-title" font-style="italic"/>
-    </group>
-  </macro>
-
-  <!-- Title rules -->
-  <macro name="title-quoted">
-    <text variable="title" quotes="true"/>
-  </macro>
-  <macro name="title-italic">
-    <text variable="title" font-style="italic"/>
-  </macro>
-
-  <!-- ====== CITATION ====== -->
-  <citation et-al-min="999" et-al-use-first="999" disambiguate-add-year-suffix="true" collapse="year">
+  <!-- ========= CITATION ========= -->
+  <citation disambiguate-add-year-suffix="true" collapse="year">
     <sort>
       <key macro="authors"/>
       <key variable="issued"/>
+      <key variable="title"/>
     </sort>
     <layout prefix="(" suffix=")" delimiter="; ">
       <group delimiter=", ">
@@ -105,18 +100,17 @@
     </layout>
   </citation>
 
-  <!-- ====== BIBLIOGRAPHY ====== -->
-  <bibliography hanging-indent="true" entry-spacing="1" et-al-min="999" et-al-use-first="999">
+  <!-- ========= BIBLIOGRAPHY ========= -->
+  <bibliography hanging-indent="true" entry-spacing="1">
     <sort>
       <key macro="authors"/>
       <key variable="issued"/>
       <key variable="title"/>
     </sort>
-
     <layout>
       <choose>
 
-        <!-- JOURNAL ARTICLE -->
+        <!-- Artigo de periódico -->
         <if type="article-journal">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -125,14 +119,14 @@
             </group>
             <text macro="title-quoted" suffix="."/>
             <group delimiter=", ">
-              <text macro="container"/>
+              <text macro="container-italic"/>
               <text macro="journal-locators"/>
             </group>
             <text value="."/>
           </group>
         </if>
 
-        <!-- MAGAZINE/NEWSPAPER -->
+        <!-- Revista/Jornal (com acesso online) -->
         <else-if type="article-magazine article-newspaper" match="any">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -140,12 +134,12 @@
               <text macro="year-with-suffix"/>
             </group>
             <text macro="title-quoted" suffix="."/>
-            <text macro="container" suffix="."/>
+            <text macro="container-italic" suffix="."/>
             <text macro="access" suffix="."/>
           </group>
         </else-if>
 
-        <!-- PROCEEDINGS PAPER -->
+        <!-- Trabalho em anais -->
         <else-if type="paper-conference">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -162,7 +156,27 @@
           </group>
         </else-if>
 
-        <!-- BOOK -->
+        <!-- Capítulo de livro -->
+        <else-if type="chapter">
+          <group delimiter=" ">
+            <group delimiter=", ">
+              <text macro="authors"/>
+              <text macro="year-with-suffix"/>
+            </group>
+            <text macro="title-quoted" suffix="."/>
+            <group delimiter=" ">
+              <text term="in" text-case="capitalize-first"/>
+              <text macro="container-italic" suffix="."/>
+            </group>
+            <group delimiter=", ">
+              <text macro="publisher-block"/>
+              <text variable="page" prefix="pp. "/>
+            </group>
+            <text value="."/>
+          </group>
+        </else-if>
+
+        <!-- Livro -->
         <else-if type="book">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -174,27 +188,7 @@
           </group>
         </else-if>
 
-        <!-- CHAPTER (book section) -->
-        <else-if type="chapter">
-          <group delimiter=" ">
-            <group delimiter=", ">
-              <text macro="authors"/>
-              <text macro="year-with-suffix"/>
-            </group>
-            <text macro="title-quoted" suffix="."/>
-            <group delimiter=" ">
-              <text term="in" text-case="capitalize-first" suffix=" "/>
-              <text macro="container" suffix="."/>
-            </group>
-            <group delimiter=", ">
-              <text macro="publisher-block"/>
-              <text variable="page" prefix="pp. "/>
-            </group>
-            <text value="."/>
-          </group>
-        </else-if>
-
-        <!-- REPORT -->
+        <!-- Relatório -->
         <else-if type="report">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -207,7 +201,7 @@
           </group>
         </else-if>
 
-        <!-- THESIS -->
+        <!-- Tese -->
         <else-if type="thesis">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -224,7 +218,7 @@
           </group>
         </else-if>
 
-        <!-- PATENT -->
+        <!-- Patente -->
         <else-if type="patent">
           <group delimiter=" ">
             <group delimiter=", ">
@@ -237,23 +231,11 @@
               <text variable="authority"/>
               <text variable="number" prefix="Registry number: "/>
             </group>
-            <group delimiter=", " prefix=". ">
-              <date variable="submitted" prefix="Application date: ">
-                <date-part name="day" suffix=" "/>
-                <date-part name="month" form="long" suffix=" "/>
-                <date-part name="year"/>
-              </date>
-              <date variable="issued" prefix="Grant date: ">
-                <date-part name="day" suffix=" "/>
-                <date-part name="month" form="long" suffix=" "/>
-                <date-part name="year"/>
-              </date>
-            </group>
             <text value="."/>
           </group>
         </else-if>
 
-        <!-- WEBPAGE / GENERIC -->
+        <!-- Web / genérico -->
         <else>
           <group delimiter=" ">
             <group delimiter=", ">
@@ -268,7 +250,7 @@
               </if>
               <else>
                 <text macro="title-quoted" suffix="."/>
-                <text macro="container" suffix="."/>
+                <text macro="container-italic" suffix="."/>
               </else>
             </choose>
           </group>
